@@ -67,7 +67,7 @@ export default {
 
   methods: {
     ...mapActions({
-      fetchPost: "fetchPost",
+      // fetchPost: "fetchPost",
       savePost: "savePost",
     }),
 
@@ -86,7 +86,6 @@ export default {
         if (value === "update") {
           this.isUpdatePage = true;
 
-          await this.fetchPost(this.$route.params.id);
           this.form.title = this.post.title;
           this.form.body = this.post.body;
           this.form.id = this.post.id;
