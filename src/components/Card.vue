@@ -1,6 +1,6 @@
 <template>
-  <v-col md="4">
-    <v-card max-width="350" outlined>
+  <v-col sm="6" md="4" xl="3">
+    <v-card outlined>
       <v-list-item three-line>
         <v-list-item-content>
           <div class="text-overline mb-4">OVERLINE</div>

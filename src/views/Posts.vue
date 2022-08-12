@@ -1,32 +1,28 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container>
-        <v-container class="my-4">
-          <v-row align="center" justify="space-between">
-            <h1>Posts List</h1>
+  <v-main>
+    <v-container>
+      <v-container class="my-4">
+        <v-row align="center" justify="space-between">
+          <h1>Posts List</h1>
 
-            <v-btn @click="addPost()" depressed color="primary">
-              Add Post
-            </v-btn>
-          </v-row>
-        </v-container>
-
-        <v-row>
-          <Skeleton v-if="loading" />
-
-          <Card v-else v-for="post in posts" :key="post.id" :post="post" />
+          <v-btn @click="addPost()" depressed color="primary"> Add Post </v-btn>
         </v-row>
       </v-container>
 
-      <v-pagination
-        class="mt-4"
-        v-model="currentPage"
-        :length="lastPage"
-        @input="pageChanged()"
-      ></v-pagination>
-    </v-main>
-  </v-app>
+      <v-row>
+        <Skeleton v-if="loading" />
+
+        <Card v-else v-for="post in posts" :key="post.id" :post="post" />
+      </v-row>
+    </v-container>
+
+    <v-pagination
+      class="mt-4"
+      v-model="currentPage"
+      :length="lastPage"
+      @input="pageChanged()"
+    ></v-pagination>
+  </v-main>
 </template>
 
 <script>

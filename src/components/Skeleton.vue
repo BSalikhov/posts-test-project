@@ -2,11 +2,10 @@
   <v-container>
     <v-sheet v-if="type === 'list'" class="pa-4">
       <v-row>
-        <v-col cols="4" v-for="item in 9" :key="item">
+        <v-col sm="6" md="4" xl="3" v-for="item in 9" :key="item">
           <v-skeleton-loader
             class="mx-auto"
             elevation="1"
-            max-width="350"
             height="180"
             type="card"
           ></v-skeleton-loader>
