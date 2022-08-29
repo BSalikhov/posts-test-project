@@ -76,7 +76,7 @@ export default new Vuex.Store({
         }
       } else {
         try {
-          await axios.post(`ss`, payload);
+          await axios.post(``, payload);
           this.$router.push({ name: "posts" });
 
           Vue.notify({
