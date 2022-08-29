@@ -72,9 +72,7 @@ export default {
 
     sendForm() {
       if (this.valid) {
-        this.savePost(this.form).then(() => {
-          this.$router.push({ name: "posts" });
-        });
+        this.savePost(this.form);
       }
     },
   },

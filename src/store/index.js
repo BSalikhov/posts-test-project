@@ -62,6 +62,7 @@ export default new Vuex.Store({
       if (payload.id) {
         try {
           await axios.put(`/${payload.id}`, payload);
+          this.$router.go(-1);
 
           Vue.notify({
             text: "Successfully updated",
@@ -75,7 +76,8 @@ export default new Vuex.Store({
         }
       } else {
         try {
-          await axios.post(``, payload);
+          await axios.post(`ss`, payload);
+          this.$router.push({ name: "posts" });
 
           Vue.notify({
             text: "Successfully created",
