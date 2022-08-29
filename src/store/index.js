@@ -11,7 +11,6 @@ export default new Vuex.Store({
     comments: null,
     loading: false,
     totalPosts: null,
-    url: "https://jsonplaceholder.typicode.com/posts",
   },
 
   mutations: {
@@ -40,7 +39,7 @@ export default new Vuex.Store({
     async fetchPosts({ commit }, params = {}) {
       commit("loading", true);
 
-      const response = await axios.get(`${this.state.url}`, { params });
+      const response = await axios.get(``, { params });
 
       const headers = new Headers(response.headers);
       commit("totalPosts", +headers.get("X-Total-Count"));
@@ -53,7 +52,7 @@ export default new Vuex.Store({
       commit("loading", true);
       await dispatch("fetchComments", id);
 
-      const { data } = await axios.get(`${this.state.url}/${id}`);
+      const { data } = await axios.get(`/${id}`);
 
       commit("post", data);
       commit("loading", false);
@@ -61,18 +60,42 @@ export default new Vuex.Store({
 
     async savePost(_, payload) {
       if (payload.id) {
-        return await axios.put(`${this.state.url}/${payload.id}`, payload);
+        try {
+          await axios.put(`/${payload.id}`, payload);
 
-        // commit("post", data);
+          Vue.notify({
+            text: "Successfully updated",
+            type: "success",
+          });
+        } catch (error) {
+          Vue.notify({
+            text: error,
+            type: "error",
+          });
+        }
       } else {
-        return await axios.post(`${this.state.url}`, payload);
+        try {
+          await axios.post(``, payload);
+
+          Vue.notify({
+            text: "Successfully created",
+            type: "success",
+          });
+          return;
+        } catch (error) {
+          Vue.notify({
+            text: error,
+            type: "error",
+          });
+          return;
+        }
       }
     },
 
     async fetchComments({ commit }, id) {
       commit("loading", true);
 
-      const { data } = await axios.get(`${this.state.url}/${id}/comments`);
+      const { data } = await axios.get(`/${id}/comments`);
 
       commit("comments", data);
       commit("loading", false);

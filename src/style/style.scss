@@ -1,0 +1,14 @@
+.notification {
+  padding: 20px;
+  margin: 16px;
+
+  &.error {
+    color: white;
+    background: red;
+  }
+
+  &.success {
+    color: white;
+    background: rgb(13, 159, 13);
+  }
+}

@@ -67,7 +67,6 @@ export default {
 
   methods: {
     ...mapActions({
-      // fetchPost: "fetchPost",
       savePost: "savePost",
     }),
 
@@ -82,7 +81,7 @@ export default {
 
   watch: {
     "$route.name": {
-      async handler(value) {
+      handler(value) {
         if (value === "update") {
           this.isUpdatePage = true;
 
@@ -103,8 +102,5 @@ export default {
 <style scoped>
 .form-container {
   border: 1px solid gray;
-}
-
-.form-title {
 }
 </style>
