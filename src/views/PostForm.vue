@@ -31,7 +31,10 @@
             <v-btn @click="$router.go(-1)" class="mr-4">Cancel</v-btn>
 
             <v-btn type="submit" :disabled="!valid" color="primary"
-              >{{ isUpdatePage ? "Update" : "Create" }} Post</v-btn
+              >{{ isUpdatePage ? "Update" : "Create" }} Post
+              <v-icon class="ml-1" v-if="loading" size="large"
+                >fas fa-circle-notch fa-spin</v-icon
+              ></v-btn
             >
           </div>
         </v-row>
@@ -48,11 +51,10 @@ export default {
 
   data: () => ({
     valid: false,
-    isUpdatePage: false,
+    loading: false,
     form: {
       title: "",
       body: "",
-      id: null,
       userId: 1,
     },
     titleRules: [(v) => !!v || "Title is required"],
@@ -61,38 +63,61 @@ export default {
 
   computed: {
     ...mapState({
-      post: (state) => state.post,
+      post: (state) => state.post.post,
     }),
+
+    isUpdatePage() {
+      return this.$route.params.id;
+    },
   },
 
   methods: {
     ...mapActions({
-      savePost: "savePost",
+      fetchPost: "post/fetchPost",
+      createPost: "post/createPost",
+      updatePost: "post/updatePost",
     }),
 
-    sendForm() {
+    async sendForm() {
       if (this.valid) {
-        this.savePost(this.form);
+        try {
+          this.loading = true;
+
+          if (this.isUpdatePage) {
+            await this.updatePost({ id: this.post?.id, payload: this.form });
+            this.$router.go(-1);
+          } else {
+            await this.createPost(this.form);
+            this.$router.push({ name: "posts" });
+          }
+
+          this.$notify({
+            text: "Successfully submitted",
+            type: "success",
+          });
+        } catch (error) {
+          this.$notify({
+            text: error,
+            type: "error",
+          });
+        }
+        this.loading = false;
       }
     },
   },
 
-  watch: {
-    "$route.name": {
-      handler(value) {
-        if (value === "update") {
-          this.isUpdatePage = true;
-
-          this.form.title = this.post.title;
-          this.form.body = this.post.body;
-          this.form.id = this.post.id;
-        } else {
-          this.form.title = "";
-          this.form.body = "";
-        }
-      },
-      immediate: true,
-    },
+  async created() {
+    if (this.isUpdatePage) {
+      try {
+        this.loading = true;
+        await this.fetchPost(this.$route.params.id);
+        this.form.title = this.post.title;
+        this.form.body = this.post.body;
+        this.loading = false;
+      } catch (error) {
+        this.$router.replace(`/posts/${this.$route.params.id}`);
+      }
+    }
   },
 };
 </script>

@@ -17,6 +17,12 @@ const routes = [
           import(/* webpackChunkName: "posts" */ "@/views/Posts.vue"),
       },
       {
+        path: "/posts/create",
+        name: "create",
+        component: () =>
+          import(/* webpackChunkName: "create" */ "@/views/PostForm.vue"),
+      },
+      {
         path: "/posts/:id",
         name: "postDetails",
         component: () =>
@@ -27,12 +33,6 @@ const routes = [
         name: "update",
         component: () =>
           import(/* webpackChunkName: "update" */ "@/views/PostForm.vue"),
-      },
-      {
-        path: "/posts/create",
-        name: "create",
-        component: () =>
-          import(/* webpackChunkName: "create" */ "@/views/PostForm.vue"),
       },
     ],
   },

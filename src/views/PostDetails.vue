@@ -1,6 +1,11 @@
 <template>
   <v-main>
-    <Toolbar class="mt-10" />
+    <Toolbar
+      @deletePost="removePost"
+      @editPost="editPost"
+      :loading="loading"
+      class="mt-10"
+    />
 
     <Skeleton type="details" v-if="loading" />
 
@@ -8,12 +13,6 @@
       <main>
         <v-row dense>
           <h1>{{ post.title }}</h1>
-
-          <v-spacer></v-spacer>
-
-          <v-btn @click="editPost" icon>
-            <v-icon color="blue">mdi-pencil</v-icon>
-          </v-btn>
         </v-row>
 
         <p class="mt-6">{{ post.body }}</p>
@@ -47,13 +46,17 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 import Skeleton from "../components/Skeleton";
 import Toolbar from "../components/Toolbar";
 
 export default {
   name: "PostDetails",
+
+  data: () => ({
+    loading: false,
+  }),
 
   components: {
     Skeleton,
@@ -62,25 +65,52 @@ export default {
 
   computed: {
     ...mapState({
-      post: (state) => state.post,
-      comments: (state) => state.comments,
-      image: (state) => state.image,
-      loading: (state) => state.loading,
+      post: (state) => state.post.post,
+      comments: (state) => state.post.comments,
     }),
   },
 
   methods: {
+    ...mapMutations({
+      resetPost: "post/resetPost",
+    }),
+
     ...mapActions({
-      fetchPost: "fetchPost",
+      fetchPost: "post/fetchPost",
+      deletePost: "post/deletePost",
     }),
 
     editPost() {
       this.$router.push(`${this.$route.params.id}/update`);
     },
+
+    async removePost() {
+      this.loading = true;
+      try {
+        await this.deletePost(this.$route.params.id);
+        this.$notify({
+          text: "Successfully deleted post",
+          type: "success",
+        });
+        this.$router.push({ name: "posts" });
+      } catch (error) {
+        this.$notify({
+          text: error,
+          type: "error",
+        });
+      }
+      this.loading = false;
+    },
   },
 
   created() {
+    this.loading = true;
     this.fetchPost(this.$route.params.id);
+    this.loading = false;
+  },
+
+  destroyed() {
+    this.resetPost();
   },
 };
 </script>

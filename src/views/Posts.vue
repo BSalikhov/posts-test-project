@@ -45,9 +45,9 @@ export default {
 
   computed: {
     ...mapState({
-      posts: (state) => state.posts,
-      totalPosts: (state) => state.totalPosts,
-      loading: (state) => state.loading,
+      posts: (state) => state.posts.posts,
+      totalPosts: (state) => state.posts.totalPosts,
+      loading: (state) => state.posts.loading,
     }),
 
     lastPage() {
@@ -57,7 +57,7 @@ export default {
 
   methods: {
     ...mapActions({
-      fetchPosts: "fetchPosts",
+      fetchPosts: "posts/fetchPosts",
     }),
 
     pageChanged() {
