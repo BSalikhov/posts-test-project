@@ -1,46 +1,54 @@
 <template>
   <v-main>
-    <Toolbar
-      @deletePost="removePost"
-      @editPost="editPost"
-      :loading="loading"
-      class="mt-10"
-    />
+    <v-container>
+      <Toolbar
+        @deletePost="removePost"
+        @editPost="editPost"
+        :post="post"
+        :loading="loading"
+      />
 
-    <Skeleton type="details" v-if="loading" />
+      <Skeleton type="details" v-if="loading" />
 
-    <v-container v-if="post && !loading" class="mt-6">
-      <main>
-        <v-row dense>
-          <h1>{{ post.title }}</h1>
-        </v-row>
+      <v-main v-if="post && !loading" class="mt-6">
+        <div>
+          <v-row dense>
+            <h1 class="text-h5 font-weight-bold text-md-h4">
+              {{ post.title }}
+            </h1>
+          </v-row>
 
-        <p class="mt-6">{{ post.body }}</p>
-      </main>
-
-      <section class="comments mt-10">
-        <h3 class="mb-4">Comments</h3>
-
-        <div class="d-flex mb-6" v-for="comment in comments" :key="comment.id">
-          <!-- Again, the images are for fun bcs there are no images provided in API and I know that this implementation is not right) -->
-          <v-img
-            class="rounded-circle mr-4"
-            lazy-src="@/assets/loader.gif"
-            :src="`https://source.unsplash.com/random/200x200?sig=${
-              comment.id + 100
-            }`"
-            max-height="50"
-            max-width="50"
-            alt="user avatar"
-          />
-
-          <div>
-            <h4>{{ comment.email }}</h4>
-            <h5 class="gray my-2">{{ comment.name }}</h5>
-            <p>{{ comment.body }}</p>
-          </div>
+          <p class="mt-6">{{ post.body }}</p>
         </div>
-      </section>
+
+        <section class="comments mt-10">
+          <h3 class="mb-4">Comments</h3>
+
+          <div
+            class="d-flex mb-6"
+            v-for="comment in comments"
+            :key="comment.id"
+          >
+            <!-- Again, the images are for fun bcs there are no images provided in API and I know that this implementation is not right) -->
+            <v-img
+              class="rounded-circle mr-4"
+              lazy-src="@/assets/loader.gif"
+              :src="`https://source.unsplash.com/random/200x200?sig=${
+                comment.id + 100
+              }`"
+              max-height="50"
+              max-width="50"
+              alt="user avatar"
+            />
+
+            <div>
+              <h4>{{ comment.email }}</h4>
+              <h5 class="gray my-2">{{ comment.name }}</h5>
+              <p>{{ comment.body }}</p>
+            </div>
+          </div>
+        </section>
+      </v-main>
     </v-container>
   </v-main>
 </template>
@@ -54,10 +62,6 @@ import Toolbar from "../components/Toolbar";
 export default {
   name: "PostDetails",
 
-  data: () => ({
-    loading: false,
-  }),
-
   components: {
     Skeleton,
     Toolbar,
@@ -66,6 +70,7 @@ export default {
   computed: {
     ...mapState({
       post: (state) => state.post.post,
+      loading: (state) => state.post.loading,
       comments: (state) => state.post.comments,
     }),
   },
@@ -85,7 +90,6 @@ export default {
     },
 
     async removePost() {
-      this.loading = true;
       try {
         await this.deletePost(this.$route.params.id);
         this.$notify({
@@ -99,14 +103,11 @@ export default {
           type: "error",
         });
       }
-      this.loading = false;
     },
   },
 
   created() {
-    this.loading = true;
     this.fetchPost(this.$route.params.id);
-    this.loading = false;
   },
 
   destroyed() {

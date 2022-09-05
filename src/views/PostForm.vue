@@ -51,7 +51,6 @@ export default {
 
   data: () => ({
     valid: false,
-    loading: false,
     form: {
       title: "",
       body: "",
@@ -64,6 +63,7 @@ export default {
   computed: {
     ...mapState({
       post: (state) => state.post.post,
+      loading: (state) => state.post.loading,
     }),
 
     isUpdatePage() {
@@ -81,8 +81,6 @@ export default {
     async sendForm() {
       if (this.valid) {
         try {
-          this.loading = true;
-
           if (this.isUpdatePage) {
             await this.updatePost({ id: this.post?.id, payload: this.form });
             this.$router.go(-1);
@@ -101,7 +99,6 @@ export default {
             type: "error",
           });
         }
-        this.loading = false;
       }
     },
   },
@@ -109,11 +106,9 @@ export default {
   async created() {
     if (this.isUpdatePage) {
       try {
-        this.loading = true;
         await this.fetchPost(this.$route.params.id);
         this.form.title = this.post.title;
         this.form.body = this.post.body;
-        this.loading = false;
       } catch (error) {
         this.$router.replace(`/posts/${this.$route.params.id}`);
       }

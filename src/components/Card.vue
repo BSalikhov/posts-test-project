@@ -1,6 +1,6 @@
 <template>
   <v-col sm="6" md="4" xl="3">
-    <v-card outlined>
+    <v-card :to="`posts/${post.id}`" outlined>
       <v-list-item three-line>
         <v-list-item-content>
           <div class="text-overline mb-4">OVERLINE</div>
@@ -27,9 +27,7 @@
       </v-list-item>
 
       <v-card-actions>
-        <v-btn @click="openDetails(post.id)" outlined rounded text>
-          Read more
-        </v-btn>
+        <v-btn outlined rounded text> Read more </v-btn>
       </v-card-actions>
     </v-card>
   </v-col>
@@ -43,12 +41,6 @@ export default {
     post: {
       required: true,
       type: Object,
-    },
-  },
-
-  methods: {
-    openDetails(id) {
-      this.$router.push({ path: `/posts/${id}` });
     },
   },
 };

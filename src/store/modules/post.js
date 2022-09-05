@@ -36,7 +36,7 @@ export default {
       const { data } = await axios.get(`/${id}`);
 
       commit("setPost", data);
-      commit("setLoading", true);
+      commit("setLoading", false);
     },
 
     async updatePost(_, { id, payload }) {

@@ -1,3 +1,3 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "https://jsonplaceholder.typicode.com/posts";
+axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;

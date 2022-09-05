@@ -1,13 +1,7 @@
 <template>
   <v-main>
     <v-container>
-      <v-container class="my-4">
-        <v-row align="center" justify="space-between">
-          <h1>Posts List</h1>
-
-          <v-btn @click="addPost()" depressed color="primary"> Add Post </v-btn>
-        </v-row>
-      </v-container>
+      <Toolbar :loading="loading" />
 
       <v-row>
         <Skeleton v-if="loading" />
@@ -30,11 +24,13 @@ import { mapState, mapActions } from "vuex";
 
 import Card from "../components/Card";
 import Skeleton from "../components/Skeleton";
+import Toolbar from "../components/Toolbar";
 
 export default {
   components: {
     Card,
     Skeleton,
+    Toolbar,
   },
 
   data: () => ({
@@ -63,10 +59,6 @@ export default {
     pageChanged() {
       this.fetchPosts({ _page: this.currentPage, _limit: this.limit });
       this.$router.push({ query: { page: this.currentPage } });
-    },
-
-    addPost() {
-      this.$router.push({ name: "create" });
     },
   },
 
